@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from app.serializers import DepartmentSerializer, EmployeeSerializer
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 @csrf_exempt
 def departmentApi(request,id=0):
@@ -65,6 +66,14 @@ send_mail(
     ['to@example.com'],        # To
     fail_silently=False,
 )
+
+subject = 'Welcome!'
+text_content = 'Thanks for joining us.'
+html_content = '<p>Thanks for <strong>joining</strong> us.</p>'
+
+msg = EmailMultiAlternatives(subject, text_content, 'from@example.com', ['to@example.com'])
+msg.attach_alternative(html_content, "text/html")
+msg.send()
 
 @csrf_exempt
 def SaveFile(request):
