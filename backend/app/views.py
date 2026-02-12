@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from app.serializers import DepartmentSerializer, EmployeeSerializer
+from django.core.mail import send_mail
 
 @csrf_exempt
 def departmentApi(request,id=0):
@@ -56,6 +57,14 @@ def employeeApi(request,id=0):
         employee=Employees.objects.get(EmployeeId=id)
         employee.delete()
         return JsonResponse("Deleted Successfully",safe=False)
+        
+send_mail(
+    'Welcome to My Site!',
+    'Thanks for signing up. Glad to have you!',
+    'from@example.com',        # From
+    ['to@example.com'],        # To
+    fail_silently=False,
+)
 
 @csrf_exempt
 def SaveFile(request):
