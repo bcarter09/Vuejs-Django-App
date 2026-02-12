@@ -7,6 +7,30 @@ from app.serializers import DepartmentSerializer, EmployeeSerializer
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 
+# views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.conf import settings
+
+@api_view(['POST'])
+def send_employee_email(request):
+    try:
+        subject = request.data.get('subject')
+        message = request.data.get('message')
+        recipient_list = request.data.get('recipients', [])
+        
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=recipient_list,
+            fail_silently=False,
+        )
+        
+        return Response({'status': 'Email sent successfully'})
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 @csrf_exempt
 def departmentApi(request,id=0):
     if request.method=='GET':
